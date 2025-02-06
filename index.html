@@ -49,6 +49,8 @@
 		const ctx = canvas.getContext('2d');
 		const fileInput = document.getElementById('fileInput');
 		const dropZone = document.getElementById('dropZone');
+		let imgWidth = 0;
+		let imgHeight = 0;
 
 		// Handle file selection
 		fileInput.addEventListener('change', function (e) {
@@ -116,6 +118,8 @@
 						height *= ratio;
 					}
 
+					imgWidth = width;
+					imgHeight = height;
 					canvas.width = width;
 					canvas.height = height;
 					ctx.drawImage(img, 0, 0, width, height);
@@ -132,7 +136,7 @@
 			const width = canvas.width;
 			const height = canvas.height;
 
-			const data = goProcessImage(pixels);
+			const data = goProcessImage(pixels, imgWidth, imgHeight);
 			const newImageData = new ImageData(data, width, height);
 
 			ctx.putImageData(newImageData, 0, 0);
