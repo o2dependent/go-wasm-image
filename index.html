@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Image (Go + WASM)</title>
+	<style>
+		#dropZone {
+			width: 400px;
+			height: 200px;
+			border: 2px dashed #ccc;
+			border-radius: 10px;
+			text-align: center;
+			line-height: 200px;
+			margin: 20px;
+		}
+
+		#dropZone.dragover {
+			border-color: #666;
+			background-color: #eee;
+		}
+
+		#previewCanvas {
+			border: 1px solid #ccc;
+			margin: 20px;
+		}
+	</style>
+	<script
+		src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="p-4">
+
+	<input type="file" id="fileInput"
+		accept="image/*">
+	<div id="dropZone">Drag and drop image here
+	</div>
+	<canvas id="previewCanvas"></canvas>
+
+	<div class="flex flex-wrap gap-2 ">
+		<button class="border border-black px-2 py-1"
+			id="test-button">Test</button>
+	</div>
+
+
+	<script src="wasm_exec.js"></script>
+	<script>
+		const canvas = document.getElementById('previewCanvas');
+		const ctx = canvas.getContext('2d');
+		const fileInput = document.getElementById('fileInput');
+		const dropZone = document.getElementById('dropZone');
+
+		// Handle file selection
+		fileInput.addEventListener('change', function (e) {
+			handleImage(e.target.files[0]);
+		});
+
+		// Prevent default drag behaviors
+		['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+			dropZone.addEventListener(eventName, preventDefaults, false);
+			document.body.addEventListener(eventName, preventDefaults, false);
+		});
+
+		// Highlight drop zone when item is dragged over it
+		['dragenter', 'dragover'].forEach(eventName => {
+			dropZone.addEventListener(eventName, highlight, false);
+		});
+
+		['dragleave', 'drop'].forEach(eventName => {
+			dropZone.addEventListener(eventName, unhighlight, false);
+		});
+
+		// Handle dropped files
+		dropZone.addEventListener('drop', handleDrop, false);
+
+		function preventDefaults(e) {
+			e.preventDefault();
+			e.stopPropagation();
+		}
+
+		function highlight(e) {
+			dropZone.classList.add('dragover');
+		}
+
+		function unhighlight(e) {
+			dropZone.classList.remove('dragover');
+		}
+
+		function handleDrop(e) {
+			const dt = e.dataTransfer;
+			const files = dt.files;
+			handleImage(files[0]);
+		}
+
+		function handleImage(file) {
+			if (!file.type.startsWith('image/')) {
+				alert('Please select an image file');
+				return;
+			}
+
+			const reader = new FileReader();
+			reader.onload = function (event) {
+				const img = new Image();
+				img.onload = function () {
+					// Set canvas dimensions to match image (with scaling if needed)
+					const maxWidth = 800;
+					const maxHeight = 600;
+
+					let width = img.width;
+					let height = img.height;
+
+					// Scale image if needed
+					if (width > maxWidth || height > maxHeight) {
+						const ratio = Math.min(maxWidth / width, maxHeight / height);
+						width *= ratio;
+						height *= ratio;
+					}
+
+					canvas.width = width;
+					canvas.height = height;
+					ctx.drawImage(img, 0, 0, width, height);
+				};
+				img.src = event.target.result;
+			};
+			reader.readAsDataURL(file);
+		}
+
+		const processImage = () => {
+			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			const pixels = imageData.data;
+
+			const width = canvas.width;
+			const height = canvas.height;
+
+			const data = goProcessImage(pixels);
+			const newImageData = new ImageData(data, width, height);
+
+			ctx.putImageData(newImageData, 0, 0);
+		};
+		const processImageButton = document.querySelector("button#test-button");
+		processImageButton.addEventListener("click", processImage);
+
+		// Initialize WASM
+		const go = new Go();
+		WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject)
+			.then((result) => {
+				go.run(result.instance);
+			})
+			.catch((err) => console.error(err));
+	</script>
+</body>
+
+</html>
