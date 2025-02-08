@@ -39,6 +39,8 @@
 		class="flex flex-wrap gap-2">
 
 	</div>
+	<canvas class="hidden"
+		id="storageCanvas"></canvas>
 	<canvas id="previewCanvas"></canvas>
 
 	<div class="flex flex-wrap gap-2 ">
@@ -50,7 +52,9 @@
 	<script src="wasm_exec.js"></script>
 	<script>
 		const canvas = document.getElementById('previewCanvas');
+		const storageCanvas = document.getElementById('storageCanvas');
 		const ctx = canvas.getContext('2d');
+		const storageCanvasCtx = storageCanvas.getContext('2d');
 		const fileInput = document.getElementById('fileInput');
 		const dropZone = document.getElementById('dropZone');
 		let imgWidth = 0;
@@ -93,7 +97,7 @@
 		};
 
 		const makeColorRangeButton = (colors, name) => {
-			return `<button data-name="${name}" class="px-2 py-1 border border-black" onclick="setColorRange(${name})">${name}</button>`;
+			return `<button data-name="${name}" class="px-2 py-1 border border-black border-purple-500" onclick="setColorRange('${name}')">${name}</button>`;
 		};
 		let colorRangeHtml = "";
 		for (let name in defaultColorRanges) {
@@ -102,16 +106,22 @@
 		}
 		colorRangeListContainer.innerHTML = colorRangeHtml;
 
-		let colorRange = defaultColorRanges[0];
 
 		const setColorRange = (name) => {
-			const selected = colorRangeListContainer.querySelector("button[data-selected]");
-			if (selected) {
-				selected.removeAttribute("data-selected");
+			if (!(name in defaultColorRanges))
+				return;
+			const active = colorRangeListContainer.querySelector("button[data-active]");
+			if (active) {
+				active.removeAttribute("data-active");
+				active.classList.remove("bg-blue-500", "text-white");
 			}
-			colors = defaultColorRanges[name];
-			colorRange = colors;
+			colorRange = defaultColorRanges[name];
+			const newActive = colorRangeListContainer.querySelector(`button[data-name="${name}"]`);
+			newActive.toggleAttribute("data-active");
+			newActive.classList.add("bg-blue-500", "text-white");
 		};
+
+		setColorRange("Sunset Red");
 
 		// Handle file selection
 		fileInput.addEventListener('change', function (e) {
@@ -173,17 +183,21 @@
 					let height = img.height;
 
 					// Scale image if needed
-					// if (width > maxWidth || height > maxHeight) {
-					// 	const ratio = Math.min(maxWidth / width, maxHeight / height);
-					// 	width *= ratio;
-					// 	height *= ratio;
-					// }
+					if (width > maxWidth || height > maxHeight) {
+						const ratio = Math.min(maxWidth / width, maxHeight / height);
+						width *= ratio;
+						height *= ratio;
+					}
 
 					imgWidth = width;
 					imgHeight = height;
 					canvas.width = width;
 					canvas.height = height;
+					storageCanvas.width = width;
+					storageCanvas.height = height;
+
 					ctx.drawImage(img, 0, 0, width, height);
+					storageCanvasCtx.drawImage(img, 0, 0, width, height);
 				};
 				img.src = event.target.result;
 			};
@@ -191,7 +205,7 @@
 		}
 
 		const processImage = () => {
-			const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+			const imageData = storageCanvasCtx.getImageData(0, 0, canvas.width, canvas.height);
 			const pixels = imageData.data;
 
 			const width = canvas.width;
