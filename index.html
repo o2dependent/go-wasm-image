@@ -211,9 +211,10 @@
 			const width = canvas.width;
 			const height = canvas.height;
 
-			const data = goProcessImage(pixels, imgWidth, imgHeight, new Uint8Array(colorRange.flat()));
+			// const data = goProcessImage(pixels, imgWidth, imgHeight, "dither", new Uint8Array(colorRange.flat()));
+			const data = goProcessImage(pixels, imgWidth, imgHeight, "sortPixels", 125);
 			const newImageData = new ImageData(data, width, height);
-
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.putImageData(newImageData, 0, 0);
 		};
 		const processImageButton = document.querySelector("button#test-button");
