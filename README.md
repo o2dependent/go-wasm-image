@@ -12,7 +12,7 @@ If you'd like to set up lerna or some other monorepo tool you can, but I would r
 WASM
 
 ```sh
-air --build.cmd "GOOS=js GOARCH=wasm go build -o frontend/public/main.wasm main.go"
+air -c .air.toml
 ```
 
 Frontend
