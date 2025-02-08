@@ -35,11 +35,15 @@
 		accept="image/*">
 	<div id="dropZone">Drag and drop image here
 	</div>
+	<div id="colorRangeList"
+		class="flex flex-wrap gap-2">
+
+	</div>
 	<canvas id="previewCanvas"></canvas>
 
 	<div class="flex flex-wrap gap-2 ">
 		<button class="border border-black px-2 py-1"
-			id="test-button">Test</button>
+			id="test-button">Dither</button>
 	</div>
 
 
@@ -51,6 +55,63 @@
 		const dropZone = document.getElementById('dropZone');
 		let imgWidth = 0;
 		let imgHeight = 0;
+
+		const colorRangeListContainer = document.getElementById("colorRangeList");
+		const defaultColorRanges = {
+			"Pale Sweets": [
+				[155, 86, 116],
+				[203, 179, 255],
+				[216, 191, 216],
+				[174, 255, 247],
+				[199, 251, 150],
+			],
+
+			"Pink Candy": [
+				[5, 31, 57],
+				[74, 36, 128],
+				[197, 58, 157],
+				[255, 142, 128],
+				[255, 255, 255],
+			],
+
+			"Sunset Red": [
+				[13, 16, 27],
+				[40, 26, 45],
+				[107, 35, 65],
+				[175, 39, 71],
+				[238, 36, 61],
+			],
+
+			"RGB Pixels": [
+				[0, 0, 0],
+				[0, 0, 255],
+				[0, 255, 0],
+				[255, 0, 0],
+				[255, 255, 255],
+
+			],
+		};
+
+		const makeColorRangeButton = (colors, name) => {
+			return `<button data-name="${name}" class="px-2 py-1 border border-black" onclick="setColorRange(${name})">${name}</button>`;
+		};
+		let colorRangeHtml = "";
+		for (let name in defaultColorRanges) {
+			const colors = defaultColorRanges[name];
+			colorRangeHtml += makeColorRangeButton(colors, name);
+		}
+		colorRangeListContainer.innerHTML = colorRangeHtml;
+
+		let colorRange = defaultColorRanges[0];
+
+		const setColorRange = (name) => {
+			const selected = colorRangeListContainer.querySelector("button[data-selected]");
+			if (selected) {
+				selected.removeAttribute("data-selected");
+			}
+			colors = defaultColorRanges[name];
+			colorRange = colors;
+		};
 
 		// Handle file selection
 		fileInput.addEventListener('change', function (e) {
@@ -112,11 +173,11 @@
 					let height = img.height;
 
 					// Scale image if needed
-					if (width > maxWidth || height > maxHeight) {
-						const ratio = Math.min(maxWidth / width, maxHeight / height);
-						width *= ratio;
-						height *= ratio;
-					}
+					// if (width > maxWidth || height > maxHeight) {
+					// 	const ratio = Math.min(maxWidth / width, maxHeight / height);
+					// 	width *= ratio;
+					// 	height *= ratio;
+					// }
 
 					imgWidth = width;
 					imgHeight = height;
@@ -136,7 +197,7 @@
 			const width = canvas.width;
 			const height = canvas.height;
 
-			const data = goProcessImage(pixels, imgWidth, imgHeight);
+			const data = goProcessImage(pixels, imgWidth, imgHeight, new Uint8Array(colorRange.flat()));
 			const newImageData = new ImageData(data, width, height);
 
 			ctx.putImageData(newImageData, 0, 0);
