@@ -1,3 +1,10 @@
+---
+import "@radix-ui/themes/styles.css";
+import { Theme } from "@radix-ui/themes";
+import "../styles/global.css";
+import InitImageProcessWASM from "../components/wasm/InitImageProcessWASM.astro";
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -6,9 +13,12 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Astro Basics</title>
+		<InitImageProcessWASM />
 	</head>
 	<body>
-		<slot />
+		<Theme client:only="react">
+			<slot />
+		</Theme>
 	</body>
 </html>
 
