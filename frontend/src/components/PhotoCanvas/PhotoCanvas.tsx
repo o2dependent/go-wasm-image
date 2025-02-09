@@ -12,6 +12,7 @@ import {
 } from "../../stores/canvas";
 import { onDrop } from "./onDrop";
 import { useRefStore } from "../../hooks/useRefStore";
+import { Box, Flex } from "@radix-ui/themes";
 
 export const PhotoCanvas = () => {
 	const canvasRef = useRefStore($canvas);
@@ -35,12 +36,21 @@ export const PhotoCanvas = () => {
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
 	return (
-		<div className="px-4 py-2 grid grid-cols-1 grid-rows-1 place-items-center">
+		<Flex
+			width="100%"
+			align="center"
+			justify="center"
+			className="relative"
+			style={{
+				borderRadius: "var(--radius-2)",
+				overflow: "hidden",
+				border: "1px dashed var(--gray-a5)",
+				backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.2' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")`,
+			}}
+		>
 			<div
-				className={`flex items-center justify-center w-full rounded row-start-1 row-end-1 col-start-1 col-end-1 ${
-					isPhoto
-						? "opacity-50 h-full border border-dashed"
-						: "h-96 outline-dashed"
+				className={`w-full flex items-center justify-center row-start-1 row-end-1 col-start-1 col-end-1 ${
+					isPhoto ? "absolute top-0 left-0 opacity-50 h-full" : "h-96"
 				}`}
 				{...getRootProps()}
 			>
@@ -56,6 +66,6 @@ export const PhotoCanvas = () => {
 				}
 				ref={canvasRef}
 			></canvas>
-		</div>
+		</Flex>
 	);
 };
