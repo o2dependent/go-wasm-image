@@ -50,8 +50,6 @@ export const onDrop: DropzoneOptions["onDrop"] = (
 			canvas.height = height;
 			storageCanvas.width = width;
 			storageCanvas.height = height;
-			console.log(canvas, storageCanvas);
-			console.log($ctx.get(), $storageCtx.get());
 			$ctx.get().drawImage(img, 0, 0, width, height);
 			$storageCtx.get().drawImage(img, 0, 0, width, height);
 			$isPhoto.set(true);
