@@ -1,6 +1,7 @@
 import {
 	Box,
 	Card,
+	Checkbox,
 	DataList,
 	Flex,
 	Heading,
@@ -25,11 +26,23 @@ export const SortPixelsControls: React.FC<SortPixelsControlsProps> = ({
 	id,
 	process,
 }) => {
-	const [maskThreshDisplay, setMaskThreshDisplay] = useState(process.data);
+	const [maskThreshDisplay, setMaskThreshDisplay] = useState(
+		process.data.maskThresh,
+	);
 
 	const commitMaskThresh = (v: number[]) => {
-		const newThreshMask = v[0];
-		$graphicProcesses.setKey(id, { ...process, data: newThreshMask });
+		const newMaskThresh = v[0];
+		$graphicProcesses.setKey(id, {
+			...process,
+			data: { ...process.data, maskThresh: newMaskThresh },
+		});
+	};
+
+	const commitInvert = (newInvert: boolean) => {
+		$graphicProcesses.setKey(id, {
+			...process,
+			data: { ...process.data, invert: newInvert },
+		});
 	};
 
 	return (
@@ -42,7 +55,7 @@ export const SortPixelsControls: React.FC<SortPixelsControlsProps> = ({
 				<DataList.Root>
 					<DataList.Item align="center">
 						<DataList.Label minWidth="88px">
-							Mask ({maskThreshDisplay})
+							Thresh ({maskThreshDisplay})
 						</DataList.Label>
 						<DataList.Value>
 							<Flex width="100%" align="center">
@@ -53,6 +66,17 @@ export const SortPixelsControls: React.FC<SortPixelsControlsProps> = ({
 									step={1}
 									onValueChange={(e) => setMaskThreshDisplay(e[0])}
 									onValueCommit={commitMaskThresh}
+								/>
+							</Flex>
+						</DataList.Value>
+					</DataList.Item>
+					<DataList.Item align="center">
+						<DataList.Label minWidth="88px">Invert Mask</DataList.Label>
+						<DataList.Value>
+							<Flex width="100%" align="center">
+								<Checkbox
+									onCheckedChange={commitInvert}
+									defaultChecked={process.data.invert}
 								/>
 							</Flex>
 						</DataList.Value>

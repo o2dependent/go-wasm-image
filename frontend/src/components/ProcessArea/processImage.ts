@@ -11,10 +11,18 @@ export const processImage = () => {
 	let data = [] as any[];
 	for (let key in graphicsProcesses) {
 		const process = graphicsProcesses[key];
+
 		data.push(process.type);
-		if (Array.isArray(process.data))
+
+		if (process.type === "dither") {
 			data.push(new Uint8Array(process.data.flat()));
-		else data.push(process.data);
+		} else if (process.type === "mask") {
+			data.push(process.data.maskThresh);
+			data.push(process.data.invert);
+		} else if (process.type === "sortPixels") {
+			data.push(process.data.maskThresh);
+			data.push(process.data.invert);
+		}
 	}
 
 	const ctx = $ctx.get();

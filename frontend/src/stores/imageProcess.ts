@@ -8,11 +8,17 @@ export interface DitherProcess {
 
 export interface MaskProcess {
 	type: "mask";
-	data: number; // maskThresh
+	data: {
+		maskThresh: number;
+		invert: boolean;
+	};
 }
 export interface SortPixelsProcess {
 	type: "sortPixels";
-	data: number; // maskThresh
+	data: {
+		maskThresh: number;
+		invert: boolean;
+	};
 }
 
 export type GraphicsProcess = DitherProcess | MaskProcess | SortPixelsProcess;

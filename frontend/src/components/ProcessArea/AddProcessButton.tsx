@@ -2,6 +2,8 @@ import { Button } from "@radix-ui/themes";
 import {
 	$graphicProcesses,
 	type GraphicsProcess,
+	type MaskProcess,
+	type SortPixelsProcess,
 } from "../../stores/imageProcess";
 import { defaultDitherColorRanges } from "./ProcessControls/ditherDefaults";
 
@@ -18,9 +20,17 @@ export const AddProcessButton: React.FC<ProcessButtonProps> = ({ type }) => {
 		if (type === "dither") {
 			process.data = defaultDitherColorRanges["Pale Sweets"];
 		} else if (type === "mask") {
-			process.data = 75;
+			const data: MaskProcess["data"] = {
+				maskThresh: 75,
+				invert: false,
+			};
+			process.data = data;
 		} else if (type === "sortPixels") {
-			process.data = 75;
+			const data: SortPixelsProcess["data"] = {
+				maskThresh: 75,
+				invert: false,
+			};
+			process.data = data;
 		}
 		const graphicProcesses = $graphicProcesses.get();
 		$graphicProcesses.setKey(id, process as GraphicsProcess);

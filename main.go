@@ -28,13 +28,15 @@ func processImage(this js.Value, args []js.Value) interface{} {
 			i += 1
 		} else if name == "mask" {
 			maskThresh := args[3+i+1].Int()
-			imageData = graphicsUtils.MakeLuminanceMask(imageData, maskThresh, width, height)
-			i += 1
+			invert := args[3+i+2].Bool()
+			imageData = graphicsUtils.MakeLuminanceMask(imageData, maskThresh, width, height, invert)
+			i += 2
 		} else if name == "sortPixels" {
 			maskThresh := args[3+i+1].Int()
-			mask := graphicsUtils.MakeLuminanceMask(imageData, maskThresh, width, height)
+			invert := args[3+i+2].Bool()
+			mask := graphicsUtils.MakeLuminanceMask(imageData, maskThresh, width, height, invert)
 			imageData = graphicsUtils.SortPixels(imageData, mask, width, height)
-			i += 1
+			i += 2
 		}
 	}
 

@@ -25,8 +25,11 @@ export const MaskControls: React.FC<MaskControlsProps> = ({ id, process }) => {
 	const [maskThreshDisplay, setMaskThreshDisplay] = useState(DEFAULT_VALUE);
 
 	const commitMaskThresh = (v: number[]) => {
-		const newThreshMask = v[0];
-		$graphicProcesses.setKey(id, { ...process, data: newThreshMask });
+		const newMaskThresh = v[0];
+		$graphicProcesses.setKey(id, {
+			...process,
+			data: { ...process.data, maskThresh: newMaskThresh },
+		});
 	};
 
 	return (
