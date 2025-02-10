@@ -16,7 +16,6 @@ export const processImage = () => {
 			data.push(new Uint8Array(process.data.flat()));
 		else data.push(process.data);
 	}
-	console.log(data);
 
 	const ctx = $ctx.get();
 	const canvas = $canvas.get();
