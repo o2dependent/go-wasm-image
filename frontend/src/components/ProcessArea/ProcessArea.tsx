@@ -5,11 +5,12 @@ import {
 	graphicProcessTypes,
 	type GraphicsProcess,
 } from "../../stores/imageProcess";
-import { ProcessButton } from "./ProcessButton";
+import { AddProcessButton } from "./AddProcessButton";
 import { Card, Flex, Grid, Heading } from "@radix-ui/themes";
 import { DitherControls } from "./ProcessControls/DitherControls";
 import { MaskControls } from "./ProcessControls/MaskControls";
 import { SortPixelsControls } from "./ProcessControls/SortPixelsControls";
+import { ProcessButton } from "./ProcessButton";
 
 export const ProcessArea = () => {
 	const graphicProcesses = useStore($graphicProcesses);
@@ -17,13 +18,14 @@ export const ProcessArea = () => {
 	return (
 		<Flex width={{ initial: "100%", md: "600px" }} gap="2" direction="column">
 			<Heading size="6">Graphics Processes</Heading>
+			<ProcessButton />
 			<Card>
 				<Heading size="3" mb="2">
 					Add Process
 				</Heading>
 				<Grid gap="1" columns="2">
 					{graphicProcessTypes?.map((type) => (
-						<ProcessButton key={type} type={type} />
+						<AddProcessButton key={type} type={type} />
 					))}
 				</Grid>
 			</Card>
