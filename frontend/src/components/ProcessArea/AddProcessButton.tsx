@@ -27,7 +27,10 @@ export const AddProcessButton: React.FC<ProcessButtonProps> = ({ type }) => {
 			index,
 		};
 		if (type === "dither") {
-			process.data = defaultDitherColorRanges["Pale Sweets"];
+			process.data = {
+				key: "Pale Sweets",
+				colorRange: defaultDitherColorRanges["Pale Sweets"],
+			};
 		} else if (type === "mask") {
 			const data: MaskProcess["data"] = {
 				maskThresh: 75,
