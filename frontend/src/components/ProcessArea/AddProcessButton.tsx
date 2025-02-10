@@ -14,8 +14,17 @@ interface ProcessButtonProps {
 export const AddProcessButton: React.FC<ProcessButtonProps> = ({ type }) => {
 	const addGraphicProcess = (type: GraphicsProcess["type"]) => {
 		const id = crypto.randomUUID();
+		const graphicProcesses = $graphicProcesses.get();
+		let index = 0;
+		for (let key in graphicProcesses) {
+			const gp = graphicProcesses[key];
+			if (index <= gp.index) {
+				index = gp.index + 1;
+			}
+		}
 		const process: Partial<GraphicsProcess> = {
 			type: type,
+			index,
 		};
 		if (type === "dither") {
 			process.data = defaultDitherColorRanges["Pale Sweets"];
@@ -32,7 +41,7 @@ export const AddProcessButton: React.FC<ProcessButtonProps> = ({ type }) => {
 			};
 			process.data = data;
 		}
-		const graphicProcesses = $graphicProcesses.get();
+
 		$graphicProcesses.setKey(id, process as GraphicsProcess);
 	};
 

@@ -3,11 +3,13 @@ import { atom, map } from "nanostores";
 // TODO: add process types
 export interface DitherProcess {
 	type: "dither";
+	index: number;
 	data: number[][];
 }
 
 export interface MaskProcess {
 	type: "mask";
+	index: number;
 	data: {
 		maskThresh: number;
 		invert: boolean;
@@ -15,6 +17,7 @@ export interface MaskProcess {
 }
 export interface SortPixelsProcess {
 	type: "sortPixels";
+	index: number;
 	data: {
 		maskThresh: number;
 		invert: boolean;

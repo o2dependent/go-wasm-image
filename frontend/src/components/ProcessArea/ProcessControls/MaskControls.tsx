@@ -14,16 +14,17 @@ import {
 } from "../../../stores/imageProcess";
 import { useState } from "react";
 import { RemoveProcessButton } from "./RemoveProcessButton";
+import { SortProcessButtons } from "./SortProcessButtons";
 
 interface MaskControlsProps {
 	id: string;
 	process: MaskProcess;
 }
 
-const DEFAULT_VALUE = 75;
-
 export const MaskControls: React.FC<MaskControlsProps> = ({ id, process }) => {
-	const [maskThreshDisplay, setMaskThreshDisplay] = useState(DEFAULT_VALUE);
+	const [maskThreshDisplay, setMaskThreshDisplay] = useState(
+		process.data.maskThresh,
+	);
 
 	const commitMaskThresh = (v: number[]) => {
 		const newMaskThresh = v[0];
@@ -45,7 +46,10 @@ export const MaskControls: React.FC<MaskControlsProps> = ({ id, process }) => {
 			<Flex direction="column">
 				<Flex direction="row" align="center" justify="between">
 					<Heading size="3">Mask</Heading>
-					<RemoveProcessButton id={id} />
+					<Flex gap="2">
+						<SortProcessButtons id={id} index={process.index} />
+						<RemoveProcessButton id={id} />
+					</Flex>
 				</Flex>
 				<DataList.Root>
 					<DataList.Item align="center">
@@ -55,7 +59,7 @@ export const MaskControls: React.FC<MaskControlsProps> = ({ id, process }) => {
 						<DataList.Value>
 							<Flex width="100%" align="center">
 								<Slider
-									defaultValue={[DEFAULT_VALUE]}
+									defaultValue={[process.data.maskThresh]}
 									min={0}
 									max={255}
 									step={1}

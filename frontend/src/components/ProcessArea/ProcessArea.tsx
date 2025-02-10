@@ -14,7 +14,7 @@ import { ProcessButton } from "./ProcessButton";
 
 export const ProcessArea = () => {
 	const graphicProcesses = useStore($graphicProcesses);
-
+	console.log(Object.values(graphicProcesses));
 	return (
 		<Box width={{ initial: "100%", md: "600px" }}>
 			<Flex gap="2" direction="column">
@@ -35,17 +35,31 @@ export const ProcessArea = () => {
 						</Grid>
 					</Card>
 					<Flex gap="1" direction="column">
-						{Object.keys(graphicProcesses)?.map((id) => {
-							const gp = graphicProcesses[id];
-							if (gp.type === "dither") {
-								return <DitherControls id={id} process={gp} key={id} />;
-							} else if (gp.type === "mask") {
-								return <MaskControls id={id} process={gp} key={id} />;
-							} else if (gp.type === "sortPixels") {
-								return <SortPixelsControls id={id} process={gp} key={id} />;
-							}
-							return null;
-						})}
+						{Object.keys(graphicProcesses)
+							?.sort(
+								(a, b) => graphicProcesses[a].index - graphicProcesses[b].index,
+							)
+							?.map((id) => {
+								const gp = graphicProcesses[id];
+								if (gp.type === "dither") {
+									return (
+										<DitherControls id={id} process={gp} key={id + gp.index} />
+									);
+								} else if (gp.type === "mask") {
+									return (
+										<MaskControls id={id} process={gp} key={id + gp.index} />
+									);
+								} else if (gp.type === "sortPixels") {
+									return (
+										<SortPixelsControls
+											id={id}
+											process={gp}
+											key={id + gp.index}
+										/>
+									);
+								}
+								return null;
+							})}
 					</Flex>
 				</ScrollArea>
 			</Flex>

@@ -14,13 +14,12 @@ import {
 } from "../../../stores/imageProcess";
 import { useState } from "react";
 import { RemoveProcessButton } from "./RemoveProcessButton";
+import { SortProcessButtons } from "./SortProcessButtons";
 
 interface SortPixelsControlsProps {
 	id: string;
 	process: SortPixelsProcess;
 }
-
-const DEFAULT_VALUE = 75;
 
 export const SortPixelsControls: React.FC<SortPixelsControlsProps> = ({
 	id,
@@ -50,7 +49,10 @@ export const SortPixelsControls: React.FC<SortPixelsControlsProps> = ({
 			<Flex direction="column">
 				<Flex direction="row" align="center" justify="between">
 					<Heading size="3">Sort Pixels</Heading>
-					<RemoveProcessButton id={id} />
+					<Flex gap="2">
+						<SortProcessButtons id={id} index={process.index} />
+						<RemoveProcessButton id={id} />
+					</Flex>
 				</Flex>
 				<DataList.Root>
 					<DataList.Item align="center">
@@ -60,7 +62,7 @@ export const SortPixelsControls: React.FC<SortPixelsControlsProps> = ({
 						<DataList.Value>
 							<Flex width="100%" align="center">
 								<Slider
-									defaultValue={[DEFAULT_VALUE]}
+									defaultValue={[process.data.maskThresh]}
 									min={0}
 									max={255}
 									step={1}

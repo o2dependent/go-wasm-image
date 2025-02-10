@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import { defaultDitherColorRanges } from "./ditherDefaults";
 import { RemoveProcessButton } from "./RemoveProcessButton";
+import { SortProcessButtons } from "./SortProcessButtons";
 
 interface DitherControlsProps {
 	id: string;
@@ -51,7 +52,10 @@ export const DitherControls: React.FC<DitherControlsProps> = ({
 			<Flex direction="column">
 				<Flex direction="row" align="center" justify="between">
 					<Heading size="3">Dither</Heading>
-					<RemoveProcessButton id={id} />
+					<Flex gap="2">
+						<SortProcessButtons id={id} index={process.index} />
+						<RemoveProcessButton id={id} />
+					</Flex>
 				</Flex>
 				<DataList.Root>
 					<DataList.Item align="center">
