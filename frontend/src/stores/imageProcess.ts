@@ -1,11 +1,21 @@
-import { atom } from "nanostores";
+import { atom, map } from "nanostores";
 
 // TODO: add process types
-export interface GraphicsProcess {
-	id: string;
-	type: "dither" | "mask" | "sortPixels";
-	data: any;
+export interface DitherProcess {
+	type: "dither";
+	data: number[][];
 }
+
+export interface MaskProcess {
+	type: "mask";
+	data: number; // maskThresh
+}
+export interface SortPixelsProcess {
+	type: "sortPixels";
+	data: number; // maskThresh
+}
+
+export type GraphicsProcess = DitherProcess | MaskProcess | SortPixelsProcess;
 
 export const graphicProcessTypes: GraphicsProcess["type"][] = [
 	"dither",
@@ -13,4 +23,4 @@ export const graphicProcessTypes: GraphicsProcess["type"][] = [
 	"mask",
 ];
 
-export const $graphicProcesses = atom([] as GraphicsProcess[]);
+export const $graphicProcesses = map({} as Record<string, GraphicsProcess>);

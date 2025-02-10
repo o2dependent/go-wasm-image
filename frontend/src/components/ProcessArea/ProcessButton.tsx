@@ -3,6 +3,7 @@ import {
 	$graphicProcesses,
 	type GraphicsProcess,
 } from "../../stores/imageProcess";
+import { defaultDitherColorRanges } from "./ProcessControls/ditherDefaults";
 
 interface ProcessButtonProps {
 	type: GraphicsProcess["type"];
@@ -10,13 +11,19 @@ interface ProcessButtonProps {
 
 export const ProcessButton: React.FC<ProcessButtonProps> = ({ type }) => {
 	const addGraphicProcess = (type: GraphicsProcess["type"]) => {
-		const process: GraphicsProcess = {
-			id: crypto.randomUUID(),
+		const id = crypto.randomUUID();
+		const process: Partial<GraphicsProcess> = {
 			type: type,
-			data: {},
 		};
+		if (type === "dither") {
+			process.data = defaultDitherColorRanges["Pale Sweets"];
+		} else if (type === "mask") {
+			process.data = 75;
+		} else if (type === "sortPixels") {
+			process.data = 75;
+		}
 		const graphicProcesses = $graphicProcesses.get();
-		$graphicProcesses.set([...graphicProcesses, process]);
+		$graphicProcesses.setKey(id, process as GraphicsProcess);
 	};
 
 	return (

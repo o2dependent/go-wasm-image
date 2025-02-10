@@ -12,13 +12,11 @@ import InitImageProcessWASM from "../components/wasm/InitImageProcessWASM.astro"
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>Go WASM Image Demo</title>
 		<InitImageProcessWASM />
 	</head>
 	<body>
-		<Theme appearance="dark" client:only="react">
-			<slot />
-		</Theme>
+		<slot />
 	</body>
 </html>
 
