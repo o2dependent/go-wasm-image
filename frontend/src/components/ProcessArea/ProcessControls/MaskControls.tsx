@@ -1,6 +1,7 @@
 import {
 	Box,
 	Card,
+	Checkbox,
 	DataList,
 	Flex,
 	Heading,
@@ -32,6 +33,13 @@ export const MaskControls: React.FC<MaskControlsProps> = ({ id, process }) => {
 		});
 	};
 
+	const commitInvert = (newInvert: boolean) => {
+		$graphicProcesses.setKey(id, {
+			...process,
+			data: { ...process.data, invert: newInvert },
+		});
+	};
+
 	return (
 		<Card>
 			<Flex direction="column">
@@ -53,6 +61,17 @@ export const MaskControls: React.FC<MaskControlsProps> = ({ id, process }) => {
 									step={1}
 									onValueChange={(e) => setMaskThreshDisplay(e[0])}
 									onValueCommit={commitMaskThresh}
+								/>
+							</Flex>
+						</DataList.Value>
+					</DataList.Item>
+					<DataList.Item align="center">
+						<DataList.Label minWidth="88px">Invert Mask</DataList.Label>
+						<DataList.Value>
+							<Flex width="100%" align="center">
+								<Checkbox
+									onCheckedChange={commitInvert}
+									defaultChecked={process.data.invert}
 								/>
 							</Flex>
 						</DataList.Value>
