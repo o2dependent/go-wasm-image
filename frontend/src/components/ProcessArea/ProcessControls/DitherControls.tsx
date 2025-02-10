@@ -60,7 +60,7 @@ export const DitherControls: React.FC<DitherControlsProps> = ({
 							<Select.Root
 								onValueChange={commitColorRange}
 								value={colorRangeKey}
-								defaultValue={"Pale Sweets"}
+								defaultValue={DEFAULT_VALUE}
 							>
 								<Select.Trigger />
 								<Select.Content>
