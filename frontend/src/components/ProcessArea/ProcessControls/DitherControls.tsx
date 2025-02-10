@@ -8,6 +8,7 @@ import {
 } from "@radix-ui/themes";
 import {
 	$graphicProcesses,
+	type DitherKeyValue,
 	type DitherProcess,
 } from "../../../stores/imageProcess";
 import { useState } from "react";
@@ -20,17 +21,13 @@ interface DitherControlsProps {
 	process: DitherProcess;
 }
 
-type KeyValue = keyof typeof defaultDitherColorRanges | "Custom";
-
-const DEFAULT_VALUE = "Pale Sweets" as KeyValue;
-
 export const DitherControls: React.FC<DitherControlsProps> = ({
 	id,
 	process,
 }) => {
-	const [colorRangeKey, setColorRangeKey] = useState(DEFAULT_VALUE);
+	const [colorRangeKey, setColorRangeKey] = useState(process.data.key);
 
-	const commitColorRange = (key: KeyValue) => {
+	const commitColorRange = (key: DitherKeyValue) => {
 		let newColorRange: number[][];
 		if (key in defaultDitherColorRanges) {
 			newColorRange =
@@ -44,7 +41,10 @@ export const DitherControls: React.FC<DitherControlsProps> = ({
 		} else return;
 
 		setColorRangeKey(key);
-		$graphicProcesses.setKey(id, { ...process, data: newColorRange });
+		$graphicProcesses.setKey(id, {
+			...process,
+			data: { colorRange: newColorRange, key },
+		});
 	};
 
 	return (
@@ -64,7 +64,7 @@ export const DitherControls: React.FC<DitherControlsProps> = ({
 							<Select.Root
 								onValueChange={commitColorRange}
 								value={colorRangeKey}
-								defaultValue={DEFAULT_VALUE}
+								defaultValue={process.data.key}
 							>
 								<Select.Trigger />
 								<Select.Content>

@@ -1,10 +1,15 @@
 import { atom, map } from "nanostores";
+import type { defaultDitherColorRanges } from "../components/ProcessArea/ProcessControls/ditherDefaults";
 
-// TODO: add process types
+export type DitherKeyValue = keyof typeof defaultDitherColorRanges | "Custom";
+
 export interface DitherProcess {
 	type: "dither";
 	index: number;
-	data: number[][];
+	data: {
+		colorRange: number[][];
+		key: DitherKeyValue;
+	};
 }
 
 export interface MaskProcess {

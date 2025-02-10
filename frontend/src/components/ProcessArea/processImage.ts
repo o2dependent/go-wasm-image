@@ -15,7 +15,7 @@ export const processImage = () => {
 		data.push(process.type);
 
 		if (process.type === "dither") {
-			data.push(new Uint8Array(process.data.flat()));
+			data.push(new Uint8Array(process.data.colorRange.flat()));
 		} else if (process.type === "mask") {
 			data.push(process.data.maskThresh);
 			data.push(process.data.invert);
