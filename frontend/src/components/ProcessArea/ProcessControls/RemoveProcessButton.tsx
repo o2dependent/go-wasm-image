@@ -10,6 +10,16 @@ export const RemoveProcessButton: React.FC<RemoveProcessButtonProps> = ({
 	id,
 }) => {
 	const removeProcess = () => {
+		const graphicProcesses = $graphicProcesses.get();
+		const index = graphicProcesses[id].index;
+		for (let key in graphicProcesses) {
+			const gp = graphicProcesses[key];
+			if (key === id) continue;
+			if (gp.index > index) {
+				gp.index -= 1;
+			}
+		}
+		$graphicProcesses.set(graphicProcesses);
 		$graphicProcesses.setKey(id, undefined!);
 	};
 	return (
